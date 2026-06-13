@@ -1,0 +1,14 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Python parser cache
+__pycache__/
+*.pyc
+
+# Optional: if you ever want to keep your real Firebase keys out of git,
+# uncomment the next line and keep a firebase-config.example.js committed.
+# js/firebase-config.js
