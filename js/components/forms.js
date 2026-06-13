@@ -76,7 +76,7 @@ export function openExpenseForm(existing) {
   const filNote = el("div", { class: "note-box", style: "margin-top:4px" });
   const updateNote = () => {
     filNote.style.display = category.value === "Filament" ? "block" : "none";
-    filNote.innerHTML = "<b>Heads up:</b> Filament spend is tracked for cash-flow and your filament runway, but it's <b>not</b> subtracted from net profit again — your per-sale landing cost already accounts for filament used. No double counting.";
+    filNote.innerHTML = "<b>Heads up:</b> Filament is counted as a cost here once — when you buy it. Your per-sale landing cost is used for product margins only, so filament is never double-counted. Unused filament shows up on the Filament runway page.";
   };
   category.addEventListener("change", updateNote); updateNote();
 

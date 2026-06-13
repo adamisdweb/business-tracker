@@ -61,7 +61,7 @@ export function trendChart(canvas, series, { showNet = true } = {}) {
     },
   ];
   if (showNet) ds.push({
-    label: "Net profit", data: series.map((m) => round(m.net)),
+    label: "Operating profit", data: series.map((m) => round(m.net)),
     borderColor: "#c47bff", borderDash: [5, 4], tension: 0.35, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, fill: false,
   });
   return mount(canvas, {

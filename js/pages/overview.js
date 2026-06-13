@@ -42,27 +42,35 @@ export default {
     // ===== HERO: net profit + breakdown =====
     const hero = el("div", { class: "hero" },
       el("div", { class: "glow a" }), el("div", { class: "glow b" }),
-      el("div", { class: "eyebrow" }, "True net profit" + (filters.preset !== "all" ? " · " + rangeLabel() : "")),
+      el("div", { class: "eyebrow" }, "Net cash profit" + (filters.preset !== "all" ? " · " + rangeLabel() : "")),
       el("div", { class: "big" + (sum.netProfit < 0 ? " neg" : "") }, fmtGBP(sum.netProfit)),
       el("div", { class: "muted", style: "position:relative;font-size:13px" },
-        "Gross profit − expenses (filament excluded, so it's never double-counted)"),
+        "What you've actually banked — every cost counted, including filament bought but not yet used"),
       el("div", { class: "row" },
         heroItem("Revenue", fmtGBP(sum.revenue)),
         heroItem("Gross profit", fmtGBP(sum.grossProfit), "pos"),
-        heroItem("Expenses (excl. filament)", fmtGBP(sum.nonFilamentExpenses), "negv"),
-        heroItem("Avg margin", fmtPct(sum.avgMargin))));
+        heroItem("Operating profit", fmtGBP(sum.operatingProfit), sum.operatingProfit >= 0 ? "pos" : "negv"),
+        heroItem("Net margin", fmtPct(sum.netMargin))));
 
-    // breakdown card (waterfall list)
+    // breakdown card (full reconciling waterfall)
+    const wf = el("div", { class: "breakdown" });
+    wf.append(bRow("💰", "Revenue", `${sum.orders} orders`, sum.revenue, "pos"));
+    wf.append(bRow("🧵", "− Filament used in sold items", "the filament part of landing cost", -sum.filamentUsed, "neg"));
+    if (sum.pitchFees > 0.005) wf.append(bRow("🎪", "− Stall / pitch fees", "car-boot pitch fees", -sum.pitchFees, "neg"));
+    wf.append(bSub("Gross profit", fmtPct(sum.avgMargin) + " margin", sum.grossProfit));
+    wf.append(bRow("💸", "− Running costs", "equipment, packaging, wages, tools…", -sum.nonFilamentExpenses, "neg"));
+    wf.append(bSub("Operating profit", "filament matched to sales", sum.operatingProfit));
+    if (sum.unusedFilament >= -0.005)
+      wf.append(bRow("📦", "− Filament bought, not yet used", "stock paid for, still on the shelf", -sum.unusedFilament, "neg"));
+    else
+      wf.append(bRow("📦", "+ Filament drawn from existing stock", "used more than bought this period", -sum.unusedFilament, "pos"));
+    wf.append(bRowTotal("Net cash profit", sum.netProfit));
+
     const breakdown = el("div", { class: "card pad" },
       el("h3", { style: "font-size:15px;margin-bottom:10px" }, "How net profit is built"),
-      el("div", { class: "breakdown" },
-        bRow("💰", "Revenue", `${sum.orders} orders`, sum.revenue, "pos"),
-        bRow("🧵", "− Landing cost", "per-sale cost of goods (mostly filament)", -sum.landingCost, "neg"),
-        bRow("📈", "= Gross profit", fmtPct(sum.avgMargin) + " margin", sum.grossProfit, sum.grossProfit >= 0 ? "pos" : "neg"),
-        bRow("💸", "− Expenses excl. filament", "equipment, packaging, wages…", -sum.nonFilamentExpenses, "neg"),
-        bRowTotal("Net profit", sum.netProfit)),
+      wf,
       el("div", { class: "note-box", style: "margin-top:14px" },
-        el("span", { html: `Your filament purchases of <b>${fmtGBP(sum.filamentSpend)}</b> in this range are tracked under <a href="#/filament">Filament</a> — not subtracted here, because landing cost already covers filament used.` })));
+        el("span", { html: `<b>Gross profit</b> (${fmtGBP(sum.grossProfit)}) is your pricing health. <b>Net cash profit</b> also takes off your overheads and the <b>${fmtGBP(Math.max(0, sum.unusedFilament))}</b> of filament you've bought but not yet turned into sales — tracked on the <a href="#/filament">Filament</a> page.` })));
 
     content.append(el("div", { class: "grid cols-2 page-section" }, hero, breakdown));
 
@@ -83,7 +91,7 @@ export default {
       el("div", { class: "chart-head" },
         el("h3", {}, "Revenue & profit over time"),
         el("div", { class: "legend" },
-          legendItem("#6ea8fe", "Revenue"), legendItem("#36d399", "Gross profit"), legendItem("#c47bff", "Net profit"))),
+          legendItem("#6ea8fe", "Revenue"), legendItem("#36d399", "Gross profit"), legendItem("#c47bff", "Operating profit"))),
       el("div", { class: "chart-wrap lg" }, trendCanvas));
     content.append(el("div", { class: "page-section" }, trendCard));
 
@@ -131,6 +139,14 @@ function bRow(ico, label, desc, amt, cls) {
     el("div", { class: "bar-ico", style: "background:var(--surface-2)" }, ico),
     el("div", { class: "b-label" }, el("div", { class: "t" }, label), el("div", { class: "d" }, desc)),
     el("div", { class: "b-amt " + (cls || "") }, (amt < 0 ? "−" : "") + fmtGBP(Math.abs(amt))));
+}
+// Subtotal milestone row (= Gross / Operating profit) — visually distinct.
+function bSub(label, desc, amt) {
+  const cls = amt >= 0 ? "pos" : "neg";
+  return el("div", { class: "b-row", style: "background:rgba(255,255,255,0.03);border-radius:10px" },
+    el("div", { class: "bar-ico", style: "background:var(--grad-soft)" }, "="),
+    el("div", { class: "b-label" }, el("div", { class: "t", style: "font-weight:700" }, label), el("div", { class: "d" }, desc)),
+    el("div", { class: "b-amt " + cls }, fmtGBP(amt)));
 }
 function bRowTotal(label, amt) {
   return el("div", { class: "b-row total" },

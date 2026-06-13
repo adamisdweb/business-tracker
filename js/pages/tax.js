@@ -43,6 +43,7 @@ export default {
       const sum = summarise(sales, expenses);
 
       const taxableProfit = Math.max(0, sum.netProfit);
+      const allowableCosts = sum.revenue - sum.netProfit; // cash basis: money spent this year
       const overAllowance = sum.revenue > allowance;
       const estTax = taxableProfit * (rate / 100);
 
@@ -56,7 +57,7 @@ export default {
         el("div", { class: "muted", style: "position:relative;font-size:13px" }, `Suggested amount to set aside for tax (estimate at ${rate}% on ${fmtGBP(taxableProfit)} profit)`),
         el("div", { class: "row" },
           item("Revenue", fmtGBP(sum.revenue)),
-          item("Allowable costs", fmtGBP(sum.landingCost + sum.nonFilamentExpenses), "negv"),
+          item("Allowable costs", fmtGBP(allowableCosts), "negv"),
           item("Net taxable profit", fmtGBP(taxableProfit), "pos"),
           item("Orders", String(sum.orders)))));
 
@@ -71,7 +72,7 @@ export default {
         el("div", { html: overAllowance
           ? `Your turnover of <b>${fmtGBP(sum.revenue)}</b> is above the <b>£${allowance.toLocaleString()}</b> trading allowance, so this is likely declarable self-employment income. You can deduct your actual costs (as above) <i>or</i> claim the £${allowance.toLocaleString()} allowance — whichever is better.`
           : `Your turnover of <b>${fmtGBP(sum.revenue)}</b> is under the <b>£${allowance.toLocaleString()}</b> trading allowance — you may not need to declare it. Check your total across all side income.` }),
-        el("div", { style: "margin-top:8px", class: "faint" }, "⚠️ This is a rough estimate to help you plan — not tax advice. Confirm with HMRC or an accountant. Filament is counted via per-sale landing cost (in allowable costs), never twice.")));
+        el("div", { style: "margin-top:8px", class: "faint" }, "⚠️ This is a rough estimate to help you plan — not tax advice. Confirm with HMRC or an accountant. Profit is on a cash basis: filament and other costs are deducted in the year you pay for them, counted once.")));
 
       // export
       host.append(el("div", { class: "card pad" },
@@ -82,8 +83,9 @@ export default {
             { Metric: "Tax year", Value: selectedKey },
             { Metric: "Period", Value: `6 Apr ${selectedKey.split("/")[0]} - 5 Apr ${selectedKey.split("/")[1]}` },
             { Metric: "Turnover (revenue)", Value: sum.revenue.toFixed(2) },
-            { Metric: "Landing cost (filament used)", Value: sum.landingCost.toFixed(2) },
-            { Metric: "Other expenses (excl filament)", Value: sum.nonFilamentExpenses.toFixed(2) },
+            { Metric: "Expenses paid (incl. filament bought)", Value: sum.expensesTotal.toFixed(2) },
+            { Metric: "Stall / pitch fees", Value: sum.pitchFees.toFixed(2) },
+            { Metric: "Allowable costs (cash basis)", Value: allowableCosts.toFixed(2) },
             { Metric: "Net taxable profit", Value: taxableProfit.toFixed(2) },
             { Metric: `Estimated tax @ ${rate}%`, Value: estTax.toFixed(2) },
             { Metric: "Take-home after tax", Value: (taxableProfit - estTax).toFixed(2) },

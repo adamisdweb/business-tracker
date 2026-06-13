@@ -20,15 +20,25 @@ SDK and Chart.js straight from a CDN.
 | **Tax Year** 🇬🇧 | UK self-assessment helper: profit per tax year (6 Apr – 5 Apr), an estimated tax set-aside figure and an exportable summary. |
 | **Settings** ⚙️ | Account, the profit-rule explainer, data import / export, and a danger-zone wipe. |
 
-### The profit rule (no double-counting)
+### The profit rule (cash basis, no double-counting)
 
-> **Net Profit = (Revenue − Landing Cost) − Expenses _excluding_ Filament**
+The headline **Net Cash Profit** is what you've actually banked. The Overview
+shows it as a transparent waterfall:
 
-Your per-sale **landing cost** already represents the filament used by that item,
-so filament is expensed there. Filament you _buy_ is logged under Expenses for
-cash-flow and the Filament runway page — but it is **never subtracted from profit
-a second time**. Everything else (equipment, packaging, wages, software, tools)
-is subtracted normally.
+```
+Revenue
+  − filament used in sold items   (the filament part of landing cost)
+  − stall / pitch fees            (the non-filament part of landing cost)
+= Gross profit                    (product margin — your pricing health)
+  − running costs                 (equipment, packaging, wages, tools…)
+= Operating profit                (accrual view: filament matched to sales)
+  − filament bought but not used  (stock paid for, not yet consumed)
+= Net cash profit                 (the bottom line)
+```
+
+Filament is only ever counted **once** — total filament deducted = used +
+unused = filament bought. Per-sale **landing cost** drives product margins;
+it never double-counts against the filament you buy.
 
 ---
 

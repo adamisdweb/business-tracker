@@ -2,19 +2,24 @@
 //  FINANCE ENGINE
 //  The single source of truth for every money calculation in the app.
 //
-//  THE GOLDEN RULE (anti double-counting):
-//  ----------------------------------------------------------------------
-//  • Each sale's `landingCost` already represents the FILAMENT consumed by
-//    that item. Summed across sales, that IS the cost of filament used.
-//  • The Expenses sheet ALSO contains "Filament" rows — but those are
-//    filament you BOUGHT (inventory), not filament consumed per sale.
-//  • Counting both would subtract filament twice. So:
+//  CASH BASIS — the headline "Net Profit" is what you've actually banked.
+//  Every pound that has left the account is counted exactly once:
 //
-//        Net Profit = (Revenue − Landing Cost) − Expenses EXCLUDING Filament
+//        Net Profit (cash) = Revenue − All Expenses − Stall/Pitch fees
 //
-//    Filament is expensed through landing cost as it is used; the Filament
-//    expense category is tracked for cash-flow / inventory only.
-//  ----------------------------------------------------------------------
+//  We reconcile it through a transparent waterfall so nothing is hidden:
+//
+//    Revenue
+//      − filament used in sold items  (the filament part of landing cost)
+//      − stall / pitch fees           (the non-filament part of landing cost)
+//    = Gross profit                   (product margin — pricing health)
+//      − running costs                (expenses except filament)
+//    = Operating profit               (accrual view: matches filament used)
+//      − filament bought but not used (stock paid for, not yet consumed)
+//    = Net cash profit                (headline — money actually banked)
+//
+//  No double-counting: total filament deducted = used + unused = bought.
+//  `saleProfit` (revenue − landing) stays as the per-product gross margin.
 // ===========================================================================
 import { sum, isPitchFee } from "./utils.js";
 export { sum } from "./utils.js"; // re-export so pages can pull it from finance
@@ -46,21 +51,31 @@ export function filterSales(sales, f = {}) {
 export function summarise(sales, expenses) {
   const revenue = sum(sales, (s) => s.revenue);
   const landingCost = sum(sales, (s) => s.landingCost);
-  const grossProfit = revenue - landingCost;               // = Σ sale profit
+  const grossProfit = revenue - landingCost;               // = Σ sale profit (product margin)
   const orders = sales.filter((s) => (Number(s.revenue) || 0) > 0).length;
+
+  // Split landing cost into its two parts.
+  const pitchFees = sum(sales.filter((s) => isPitchFee(s.item)), (s) => s.landingCost);
+  const filamentUsed = landingCost - pitchFees;            // filament consumed by sold items
 
   const expensesTotal = sum(expenses, (e) => e.amount);
   const filamentSpend = sum(expenses.filter((e) => e.category === "Filament"), (e) => e.amount);
   const nonFilamentExpenses = expensesTotal - filamentSpend;
 
-  // The headline number — filament NOT subtracted twice.
-  const netProfit = grossProfit - nonFilamentExpenses;
+  const operatingProfit = grossProfit - nonFilamentExpenses;   // accrual: costs matched to sales
+  const unusedFilament = filamentSpend - filamentUsed;          // bought but not yet consumed (may be -ve)
+  // Headline (cash): every pound spent counted once.
+  //   = operatingProfit − unusedFilament = revenue − expensesTotal − pitchFees
+  const netProfit = operatingProfit - unusedFilament;
 
   return {
     revenue, landingCost, grossProfit, orders,
     avgOrder: orders ? revenue / orders : 0,
     avgMargin: revenue ? (grossProfit / revenue) * 100 : 0,
-    expensesTotal, filamentSpend, nonFilamentExpenses, netProfit,
+    expensesTotal, filamentSpend, nonFilamentExpenses,
+    pitchFees, filamentUsed, operatingProfit, unusedFilament,
+    netProfit,                       // cash basis — the bottom line
+    netMargin: revenue ? (netProfit / revenue) * 100 : 0,
   };
 }
 

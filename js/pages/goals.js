@@ -46,7 +46,7 @@ export default {
     const series = monthlySeries(state.sales, state.expenses).slice(-12);
     const canvas = el("canvas");
     content.append(el("div", { class: "card chart-card page-section" },
-      el("div", { class: "chart-head" }, el("h3", {}, "Net profit by month"),
+      el("div", { class: "chart-head" }, el("h3", {}, "Operating profit by month"),
         revGoal || profitGoal ? el("span", { class: "faint", style: "font-size:12.5px" }, `Goal line: ${fmtGBP(profitGoal)}`) : ""),
       el("div", { class: "chart-wrap lg" }, canvas)));
     requestAnimationFrame(() => {
