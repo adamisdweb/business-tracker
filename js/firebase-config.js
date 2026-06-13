@@ -15,10 +15,11 @@
 // ===========================================================================
 
 export const firebaseConfig = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  storageBucket: "PASTE_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID",
+  apiKey: "AIzaSyDscgetDSA0kBfSsW4Nubr2ZGdNUfh4wMc",
+  authDomain: "poxys-business-tracker.firebaseapp.com",
+  projectId: "poxys-business-tracker",
+  storageBucket: "poxys-business-tracker.firebasestorage.app",
+  messagingSenderId: "821979565486",
+  appId: "1:821979565486:web:204e6dab1c3cb72e718c3f",
+  measurementId: "G-CRDX27P42Y",
 };
