@@ -8,13 +8,19 @@ async function boot() {
   if (!isConfigured) { renderConfigScreen(root); return; }
 
   // Only import auth/store once we know Firebase initialised.
-  const { onAuth } = await import("./auth.js");
+  const { onAuth, isAllowedEmail, logout } = await import("./auth.js");
   const { attach, detach } = await import("./store.js");
   const { mountShell } = await import("./layout.js");
   const { startRouter } = await import("./router.js");
 
   let shellUid = null;
-  onAuth((user) => {
+  onAuth(async (user) => {
+    // Defence-in-depth: never mount the app for a non-allow-listed account.
+    if (user && !isAllowedEmail(user)) {
+      await logout();
+      renderLogin(root, { error: "This Google account isn't authorised for this tracker." });
+      return;
+    }
     if (user) {
       if (shellUid !== user.uid) {
         attach(user.uid);

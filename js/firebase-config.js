@@ -23,3 +23,8 @@ export const firebaseConfig = {
   appId: "1:821979565486:web:204e6dab1c3cb72e718c3f",
   measurementId: "G-CRDX27P42Y",
 };
+
+// Only this Google account is allowed to sign in and see the data.
+// (Anyone else who tries Google sign-in is immediately rejected.)
+// Set to "" to allow any signed-in Google account.
+export const ALLOWED_EMAIL = "adammounir1111@gmail.com";

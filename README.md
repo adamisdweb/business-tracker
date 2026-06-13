@@ -47,10 +47,12 @@ Open **`js/firebase-config.js`** and replace the `PASTE_…` placeholders with t
 values Firebase just showed you. (These web keys are **not secret** — your data
 is protected by the login and the security rules below.)
 
-### 3. Turn on Email/Password login
-In the console: **Build → Authentication → Get started → Email/Password → Enable**.
-Then **Users → Add user** and create **your** login (email + password). That's the
-only account that will exist.
+### 3. Turn on Google sign-in
+In the console: **Build → Authentication → Get started → Sign-in method →
+Google → Enable** (pick a support email, Save). The app signs you in with Google
+and is locked to a single address — set in `js/firebase-config.js`
+(`ALLOWED_EMAIL`) and enforced again in `firestore.rules`. Anyone else who tries
+Google sign-in is rejected immediately, so it stays private to you.
 
 ### 4. Create the database + lock it down
 1. **Build → Firestore Database → Create database** → Production mode → pick a region.
