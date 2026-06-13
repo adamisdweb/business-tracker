@@ -4648,378 +4648,378 @@ export const SEED_SALES = [
 
 export const SEED_EXPENSES = [
   {
-    "date": "2025-01-01",
+    "date": "2025-12-01",
     "description": "3D Printer",
     "amount": 284.0,
     "category": "Equipment",
     "id": "seed-e-0001"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Multi-Colour Filament",
     "amount": 30.0,
     "category": "Filament",
     "id": "seed-e-0002"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Black & White Filament",
     "amount": 27.0,
     "category": "Filament",
     "id": "seed-e-0003"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Grey Filament",
     "amount": 13.59,
     "category": "Filament",
     "id": "seed-e-0004"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Shipping Boxes",
     "amount": 9.99,
     "category": "Packaging",
     "id": "seed-e-0005"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Pliers",
     "amount": 4.99,
     "category": "Tools",
     "id": "seed-e-0006"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Key Chains",
     "amount": 2.99,
     "category": "Accessories",
     "id": "seed-e-0007"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Filament Dryer",
     "amount": 30.0,
     "category": "Equipment",
     "id": "seed-e-0008"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "25 Boxes",
     "amount": 14.21,
     "category": "Packaging",
     "id": "seed-e-0009"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Red Filament",
     "amount": 13.59,
     "category": "Filament",
     "id": "seed-e-0010"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Bubble Wrap",
     "amount": 6.39,
     "category": "Packaging",
     "id": "seed-e-0011"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Black Filament",
     "amount": 12.99,
     "category": "Filament",
     "id": "seed-e-0012"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "25 Boxes",
     "amount": 14.21,
     "category": "Packaging",
     "id": "seed-e-0013"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Keyrings",
     "amount": 5.98,
     "category": "Accessories",
     "id": "seed-e-0014"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Magnet",
     "amount": 6.59,
     "category": "Accessories",
     "id": "seed-e-0015"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Black Filament",
     "amount": 11.04,
     "category": "Filament",
     "id": "seed-e-0016"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Grey Filament",
     "amount": 13.52,
     "category": "Filament",
     "id": "seed-e-0017"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "SUNLU Beige, Brown, Grey Filament",
     "amount": 31.47,
     "category": "Filament",
     "id": "seed-e-0018"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "25 Boxes",
     "amount": 18.99,
     "category": "Packaging",
     "id": "seed-e-0019"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "2x 1KG Grey Filament",
     "amount": 28.48,
     "category": "Filament",
     "id": "seed-e-0020"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Red Filament",
     "amount": 13.52,
     "category": "Filament",
     "id": "seed-e-0021"
   },
   {
-    "date": "2025-01-01",
+    "date": "2026-01-01",
     "description": "Black And White Filament",
     "amount": 19.99,
     "category": "Filament",
     "id": "seed-e-0022"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Boxes",
     "amount": 14.21,
     "category": "Packaging",
     "id": "seed-e-0023"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Blue Filament",
     "amount": 12.99,
     "category": "Filament",
     "id": "seed-e-0024"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Black Filament",
     "amount": 11.99,
     "category": "Filament",
     "id": "seed-e-0025"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Black and White Filament",
     "amount": 18.99,
     "category": "Filament",
     "id": "seed-e-0026"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "90 Keychains",
     "amount": 5.69,
     "category": "Accessories",
     "id": "seed-e-0027"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Keplin 6ft Table",
     "amount": 29.72,
     "category": "Equipment",
     "id": "seed-e-0028"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "2x 1kg Grey Filaments",
     "amount": 16.19,
     "category": "Filament",
     "id": "seed-e-0029"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "2x 1kg Black Filaments",
     "amount": 15.29,
     "category": "Filament",
     "id": "seed-e-0030"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Yellow Filament",
     "amount": 13.59,
     "category": "Filament",
     "id": "seed-e-0031"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "4ft Table",
     "amount": 25.99,
     "category": "Equipment",
     "id": "seed-e-0032"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "25 Boxes",
     "amount": 18.99,
     "category": "Packaging",
     "id": "seed-e-0033"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Black, White, Green Filament",
     "amount": 32.97,
     "category": "Filament",
     "id": "seed-e-0034"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "2nd P1S Combo + New Plate",
     "amount": 435.5,
     "category": "Equipment",
     "id": "seed-e-0035"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Grey, White, Black Filament",
     "amount": 34.47,
     "category": "Filament",
     "id": "seed-e-0036"
   },
   {
-    "date": "2025-02-01",
+    "date": "2026-02-01",
     "description": "Blue, Yellow, Red, Green Filament Refills",
     "amount": 33.29,
     "category": "Filament",
     "id": "seed-e-0037"
   },
   {
-    "date": "2025-04-01",
+    "date": "2026-04-01",
     "description": "Licenses - April",
     "amount": 13.3,
     "category": "Software",
     "id": "seed-e-0038"
   },
   {
-    "date": "2025-04-01",
+    "date": "2026-04-01",
     "description": "AJ Wages - April",
     "amount": 108.0,
     "category": "Wages",
     "id": "seed-e-0039"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "AJ Wages - May",
     "amount": 125.0,
     "category": "Wages",
     "id": "seed-e-0040"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "Purple Filament",
     "amount": 13.99,
     "category": "Filament",
     "id": "seed-e-0041"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "Black & White Filament",
     "amount": 22.99,
     "category": "Filament",
     "id": "seed-e-0042"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "Keplin 6ft Table (2nd one)",
     "amount": 29.72,
     "category": "Equipment",
     "id": "seed-e-0043"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "Heat Gun",
     "amount": 16.99,
     "category": "Tools",
     "id": "seed-e-0044"
   },
   {
-    "date": "2025-05-01",
+    "date": "2026-05-01",
     "description": "Elegoo 250g Bundle",
     "amount": 31.99,
     "category": "Filament",
     "id": "seed-e-0045"
   },
   {
-    "date": "2025-06-01",
+    "date": "2026-06-01",
     "description": "4KG Black",
     "amount": 42.99,
     "category": "Filament",
     "id": "seed-e-0046"
   },
   {
-    "date": "2025-06-01",
+    "date": "2026-06-01",
     "description": "Bone Filament",
     "amount": 12.25,
     "category": "Filament",
     "id": "seed-e-0047"
   },
   {
-    "date": "2025-06-01",
+    "date": "2026-06-01",
     "description": "Black & White Filament (2kg each)",
     "amount": 45.98,
     "category": "Filament",
     "id": "seed-e-0048"
   },
   {
-    "date": "2025-06-01",
+    "date": "2026-06-01",
     "description": "50 Large letter Boxes",
     "amount": 9.25,
     "category": "Packaging",
     "id": "seed-e-0049"
   },
   {
-    "date": "2025-06-08",
+    "date": "2026-06-08",
     "description": "Black, Yellow, Red Filamet",
     "amount": 32.47,
     "category": "Filament",
     "id": "seed-e-0050"
   },
   {
-    "date": "2025-06-08",
+    "date": "2026-06-08",
     "description": "Keplin 6ft Table (2nd one)",
     "amount": 29.72,
     "category": "Equipment",
     "id": "seed-e-0051"
   },
   {
-    "date": "2025-06-08",
+    "date": "2026-06-08",
     "description": "Bookmark Sleeves",
     "amount": 10.26,
     "category": "Packaging",
     "id": "seed-e-0052"
   },
   {
-    "date": "2025-06-08",
+    "date": "2026-06-08",
     "description": "Petrol",
     "amount": 34.0,
     "category": "Other",
     "id": "seed-e-0053"
   },
   {
-    "date": "2025-06-12",
+    "date": "2026-06-12",
     "description": "Tweasers",
     "amount": 2.0,
     "category": "Equipment",

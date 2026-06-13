@@ -19,6 +19,7 @@ export function setPreset(preset) {
   const today = todayISO();
   const d = new Date();
   if (preset === "all") filters.range = { start: null, end: null };
+  else if (preset === "7d") filters.range = { start: shift(today, -6), end: today };
   else if (preset === "30d") filters.range = { start: shift(today, -29), end: today };
   else if (preset === "90d") filters.range = { start: shift(today, -89), end: today };
   else if (preset === "mtd") filters.range = { start: today.slice(0, 7) + "-01", end: today };
@@ -55,6 +56,7 @@ function shift(iso, n) {
 
 export const PRESETS = [
   { key: "all", label: "All time" },
+  { key: "7d", label: "7 days" },
   { key: "30d", label: "30 days" },
   { key: "90d", label: "90 days" },
   { key: "mtd", label: "This month" },

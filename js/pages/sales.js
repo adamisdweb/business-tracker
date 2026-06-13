@@ -1,13 +1,13 @@
 // SALES — list, search, add/edit/delete, export.
-import { el, fmtGBP, fmtPct, fmtDate, fmtNum, debounce, toast } from "../utils.js";
+import { el, fmtGBP, fmtPct, fmtDate, fmtNum, debounce, toast, STATUSES } from "../utils.js";
 import { filterSales, filterByDate, summarise, saleProfit, saleMargin } from "../finance.js";
 import { filters } from "../filters.js";
 import { filterBar } from "../components/filterbar.js";
 import { dataTable } from "../components/table.js";
-import { platformBadge, statusBadge, statCard } from "../components/widgets.js";
+import { platformBadge, statCard } from "../components/widgets.js";
 import { openSaleForm } from "../components/forms.js";
 import { confirmDialog } from "../components/modal.js";
-import { deleteSale } from "../store.js";
+import { deleteSale, updateSale } from "../store.js";
 import { exportCSV } from "../components/export.js";
 
 let search = "";
@@ -47,7 +47,8 @@ export default {
       { key: "date", label: "Date", sortVal: (r) => r.date, render: (r) => fmtDate(r.date) },
       { key: "item", label: "Item", sortVal: (r) => r.item, render: (r) => el("span", { style: "font-weight:600" }, r.item) },
       { key: "platform", label: "Platform", sortVal: (r) => r.platform, render: (r) => platformBadge(r.platform) },
-      { key: "status", label: "Status", sortVal: (r) => r.status, render: (r) => statusBadge(r.status) },
+      { key: "status", label: "Status", sortVal: (r) => r.status, render: (r) => statusSelect(r) },
+      { key: "printed", label: "Printed", sortVal: (r) => (r.printed ? 1 : 0), render: (r) => printedToggle(r) },
       { key: "revenue", label: "Revenue", num: true, sortVal: (r) => r.revenue, render: (r) => fmtGBP(r.revenue) },
       { key: "landingCost", label: "Landing", num: true, sortVal: (r) => r.landingCost, render: (r) => fmtGBP(r.landingCost) },
       { key: "profit", label: "Profit", num: true, sortVal: (r) => saleProfit(r), render: (r) => { const p = saleProfit(r); return el("span", { class: p >= 0 ? "pos-num" : "neg-num" }, fmtGBP(p)); } },
@@ -73,6 +74,36 @@ export default {
     redraw();
   },
 };
+
+// Inline quick-edit controls so status / printed can be changed straight from the table.
+const STATUS_COLOR = { Delivered: "var(--green)", Dispatched: "var(--cyan)", Packed: "var(--amber)", Cancelled: "var(--red)" };
+
+function statusSelect(r) {
+  const sel = el("select", {
+    class: "input compact",
+    style: `width:auto;padding:5px 26px 5px 9px;font-size:12.5px;font-weight:700;color:${STATUS_COLOR[r.status] || "var(--text)"}`,
+    onchange: async (e) => {
+      const v = e.target.value;
+      sel.style.color = STATUS_COLOR[v] || "var(--text)";
+      try { await updateSale(r.id, { ...r, status: v }); toast("Status → " + v); }
+      catch (err) { console.error(err); toast("Update failed", "err"); }
+    },
+  });
+  STATUSES.forEach((s) => { const o = el("option", { value: s }, s); if (s === r.status) o.selected = true; sel.append(o); });
+  return sel;
+}
+
+function printedToggle(r) {
+  return el("button", {
+    class: "badge " + (r.printed ? "status-Delivered" : "cat"),
+    style: "cursor:pointer;border-style:solid",
+    title: "Click to toggle printed",
+    onclick: async () => {
+      try { await updateSale(r.id, { ...r, printed: !r.printed }); }
+      catch (err) { console.error(err); toast("Update failed", "err"); }
+    },
+  }, r.printed ? "✓ Printed" : "Not printed");
+}
 
 function exportSales(sales) {
   const rows = sales.map((s) => ({
