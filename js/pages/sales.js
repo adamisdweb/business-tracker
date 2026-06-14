@@ -7,7 +7,7 @@ import { dataTable } from "../components/table.js";
 import { platformBadge, statCard } from "../components/widgets.js";
 import { openSaleForm } from "../components/forms.js";
 import { confirmDialog } from "../components/modal.js";
-import { deleteSale, updateSale } from "../store.js";
+import { deleteSale, updateSale, addSale } from "../store.js";
 import { exportCSV } from "../components/export.js";
 
 let search = "";
@@ -62,6 +62,13 @@ export default {
         rows, columns, initialSort: { key: "date", dir: "desc" },
         emptyText: "No sales match your filters.",
         rowActions: (r) => [
+          el("button", { class: "btn icon sm ghost", title: "Duplicate this sale", onclick: async (e) => {
+            const b = e.currentTarget; b.disabled = true;
+            try {
+              await addSale({ date: r.date, item: r.item, revenue: r.revenue, landingCost: r.landingCost, platform: r.platform, status: r.status, printed: r.printed, notes: r.notes });
+              toast(`Copied “${r.item}”`);
+            } catch (err) { console.error(err); toast("Copy failed", "err"); b.disabled = false; }
+          } }, "⧉"),
           el("button", { class: "btn icon sm ghost", title: "Edit", onclick: () => openSaleForm(r) }, "✏️"),
           el("button", { class: "btn icon sm ghost", title: "Delete", onclick: async () => {
             if (await confirmDialog({ title: "Delete sale?", message: `Delete “${r.item}” (${fmtGBP(r.revenue)})? This can't be undone.` })) {
