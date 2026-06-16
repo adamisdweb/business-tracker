@@ -42,35 +42,35 @@ export default {
     // ===== HERO: net profit + breakdown =====
     const hero = el("div", { class: "hero" },
       el("div", { class: "glow a" }), el("div", { class: "glow b" }),
-      el("div", { class: "eyebrow" }, "Net cash profit" + (filters.preset !== "all" ? " · " + rangeLabel() : "")),
+      el("div", { class: "eyebrow" }, "Net profit" + (filters.preset !== "all" ? " · " + rangeLabel() : "")),
       el("div", { class: "big" + (sum.netProfit < 0 ? " neg" : "") }, fmtGBP(sum.netProfit)),
       el("div", { class: "muted", style: "position:relative;font-size:13px" },
-        "What you've actually banked — every cost counted, including filament bought but not yet used"),
+        "Revenue minus everything you've actually spent"),
       el("div", { class: "row" },
         heroItem("Revenue", fmtGBP(sum.revenue)),
-        heroItem("Gross profit", fmtGBP(sum.grossProfit), "pos"),
-        heroItem("Operating profit", fmtGBP(sum.operatingProfit), sum.operatingProfit >= 0 ? "pos" : "negv"),
+        heroItem("Total spent", fmtGBP(sum.totalSpent), "negv"),
+        heroItem("Product margin (est.)", fmtPct(sum.avgMargin)),
         heroItem("Net margin", fmtPct(sum.netMargin))));
 
-    // breakdown card (full reconciling waterfall)
+    // breakdown card — Revenue − everything spent = Net (expenses by category)
+    const catTotal = (cats) => expenses.filter((e) => cats.includes(e.category)).reduce((a, e) => a + (Number(e.amount) || 0), 0);
     const wf = el("div", { class: "breakdown" });
     wf.append(bRow("💰", "Revenue", `${sum.orders} orders`, sum.revenue, "pos"));
-    wf.append(bRow("🧵", "− Filament used in sold items", "the filament part of landing cost", -sum.filamentUsed, "neg"));
+    const lines = [
+      ["🧵", "Filament", "Filament", catTotal(["Filament"])],
+      ["📦", "Packaging & postage", "boxes, letters, sleeves", catTotal(["Packaging"])],
+      ["🖨️", "Equipment", "printers, tables, dryer", catTotal(["Equipment"])],
+      ["🧰", "Other running costs", "wages, tools, software, accessories", catTotal(["Wages", "Tools", "Software", "Accessories", "Other"])],
+    ];
+    for (const [ico, label, desc, amt] of lines) if (amt > 0.005) wf.append(bRow(ico, "− " + label, desc, -amt, "neg"));
     if (sum.pitchFees > 0.005) wf.append(bRow("🎪", "− Stall / pitch fees", "car-boot pitch fees", -sum.pitchFees, "neg"));
-    wf.append(bSub("Gross profit", fmtPct(sum.avgMargin) + " margin", sum.grossProfit));
-    wf.append(bRow("💸", "− Running costs", "equipment, packaging, wages, tools…", -sum.nonFilamentExpenses, "neg"));
-    wf.append(bSub("Operating profit", "filament matched to sales", sum.operatingProfit));
-    if (sum.unusedFilament >= -0.005)
-      wf.append(bRow("📦", "− Filament bought, not yet used", "stock paid for, still on the shelf", -sum.unusedFilament, "neg"));
-    else
-      wf.append(bRow("📦", "+ Filament drawn from existing stock", "used more than bought this period", -sum.unusedFilament, "pos"));
-    wf.append(bRowTotal("Net cash profit", sum.netProfit));
+    wf.append(bRowTotal("Net profit", sum.netProfit));
 
     const breakdown = el("div", { class: "card pad" },
       el("h3", { style: "font-size:15px;margin-bottom:10px" }, "How net profit is built"),
       wf,
       el("div", { class: "note-box", style: "margin-top:14px" },
-        el("span", { html: `<b>Gross profit</b> (${fmtGBP(sum.grossProfit)}) is your pricing health. <b>Net cash profit</b> also takes off your overheads and the <b>${fmtGBP(Math.max(0, sum.unusedFilament))}</b> of filament you've bought but not yet turned into sales — tracked on the <a href="#/filament">Filament</a> page.` })));
+        el("span", { html: `Your per-sale <b>landing cost</b> (${fmtGBP(sum.landingCost)} total) is a product-margin guide only — it's <b>not</b> subtracted here, because the filament and packaging it covers are already counted in your expenses above. That's your <b>${fmtPct(sum.avgMargin)}</b> product margin.` })));
 
     content.append(el("div", { class: "grid cols-2 page-section" }, hero, breakdown));
 
@@ -78,10 +78,10 @@ export default {
     const prevSum = previousPeriodSummary(state);
     const kpis = el("div", { class: "grid kpis page-section" },
       statCard({ label: "Revenue", ico: "💷", value: fmtGBP(sum.revenue), accent: "blue", delta: prevSum ? pctChange(sum.revenue, prevSum.revenue) : undefined, sub: prevSum ? undefined : `${fmtNum(sum.orders)} orders` }),
-      statCard({ label: "Gross profit", ico: "📈", value: fmtGBP(sum.grossProfit), accent: "green", delta: prevSum ? pctChange(sum.grossProfit, prevSum.grossProfit) : undefined }),
+      statCard({ label: "Total spent", ico: "💸", value: fmtGBP(sum.totalSpent), accent: "red", delta: prevSum ? pctChange(sum.totalSpent, prevSum.totalSpent) : undefined }),
       statCard({ label: "Net profit", ico: "✅", value: fmtGBP(sum.netProfit), accent: sum.netProfit >= 0 ? "purple" : "red", delta: prevSum ? pctChange(sum.netProfit, prevSum.netProfit) : undefined }),
       statCard({ label: "Orders", ico: "📦", value: fmtNum(sum.orders), accent: "amber", sub: `Avg ${fmtGBP(sum.avgOrder)}/order` }),
-      statCard({ label: "Avg margin", ico: "🎯", value: fmtPct(sum.avgMargin), accent: "green", sub: "across all sales" }));
+      statCard({ label: "Product margin (est.)", ico: "🎯", value: fmtPct(sum.avgMargin), accent: "green", sub: "from landing cost — info" }));
     content.append(kpis);
 
     // ===== TREND CHART =====
@@ -91,7 +91,7 @@ export default {
       el("div", { class: "chart-head" },
         el("h3", {}, "Revenue & profit over time"),
         el("div", { class: "legend" },
-          legendItem("#6ea8fe", "Revenue"), legendItem("#36d399", "Gross profit"), legendItem("#c47bff", "Operating profit"))),
+          legendItem("#6ea8fe", "Revenue"), legendItem("#36d399", "Product profit (est.)"), legendItem("#c47bff", "Net profit"))),
       el("div", { class: "chart-wrap lg" }, trendCanvas));
     content.append(el("div", { class: "page-section" }, trendCard));
 

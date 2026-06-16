@@ -26,7 +26,7 @@ export function openSaleForm(existing) {
   const pvVal = el("span", { class: "pv" }, "—");
   const pvMargin = el("span", { class: "faint" }, "");
   const preview = el("div", { class: "profit-preview" },
-    el("div", {}, el("div", { class: "faint", style: "font-size:11.5px" }, "Profit on this sale"), el("div", { class: "form-hint", style: "margin-top:2px" }, "Revenue − landing cost (your filament)")),
+    el("div", {}, el("div", { class: "faint", style: "font-size:11.5px" }, "Est. product margin"), el("div", { class: "form-hint", style: "margin-top:2px" }, "Info only — landing isn't subtracted from net profit")),
     el("div", { style: "text-align:right" }, pvVal, el("div", {}, pvMargin)));
   const recompute = () => {
     const r = parseFloat(revenue.value) || 0, l = parseFloat(landing.value) || 0;
@@ -42,7 +42,7 @@ export function openSaleForm(existing) {
     field("Platform", platform),
     el("div", { class: "full" }, field("Item / description", itemWrap, "Type to reuse a past item — landing cost auto-fills.")),
     field("Revenue (£)", revenue),
-    field("Landing cost (£)", landing, "Filament used for this item"),
+    field("Landing cost (£)", landing, "Rough per-item cost (filament, sometimes postage) — info only"),
     field("Status", status),
     el("div", {}, el("label", {}, "Printed?"), el("label", { style: "display:flex;align-items:center;gap:8px;cursor:pointer;padding-top:6px" }, printed, el("span", { class: "muted" }, "Already printed"))),
     el("div", { class: "full" }, field("Notes", notes)),

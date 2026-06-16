@@ -2,24 +2,20 @@
 //  FINANCE ENGINE
 //  The single source of truth for every money calculation in the app.
 //
-//  CASH BASIS — the headline "Net Profit" is what you've actually banked.
-//  Every pound that has left the account is counted exactly once:
+//  CASH BASIS — the headline "Net Profit" is what you've actually banked:
 //
-//        Net Profit (cash) = Revenue − All Expenses − Stall/Pitch fees
+//        Net Profit = Revenue − All Expenses − Stall/Pitch fees
 //
-//  We reconcile it through a transparent waterfall so nothing is hidden:
+//  Everything you spend money on (filament, boxes/postage, equipment, wages…)
+//  is recorded as an Expense and subtracted exactly once. The only real cost
+//  not in the Expenses sheet is car-boot pitch fees, which are logged on the
+//  PITCH FEE sales rows, so those are subtracted too.
 //
-//    Revenue
-//      − filament used in sold items  (the filament part of landing cost)
-//      − stall / pitch fees           (the non-filament part of landing cost)
-//    = Gross profit                   (product margin — pricing health)
-//      − running costs                (expenses except filament)
-//    = Operating profit               (accrual view: matches filament used)
-//      − filament bought but not used (stock paid for, not yet consumed)
-//    = Net cash profit                (headline — money actually banked)
-//
-//  No double-counting: total filament deducted = used + unused = bought.
-//  `saleProfit` (revenue − landing) stays as the per-product gross margin.
+//  `landingCost` is a per-sale ESTIMATE of an item's cost (mostly filament,
+//  sometimes postage). It's INFORMATION ONLY — it drives the per-product
+//  margin (`saleProfit` = revenue − landing) but is NOT subtracted from net
+//  profit, because the filament and packaging it represents are already in
+//  your expenses. (Otherwise those costs would be double-counted.)
 // ===========================================================================
 import { sum, isPitchFee } from "./utils.js";
 export { sum } from "./utils.js"; // re-export so pages can pull it from finance
@@ -54,26 +50,25 @@ export function summarise(sales, expenses) {
   const grossProfit = revenue - landingCost;               // = Σ sale profit (product margin)
   const orders = sales.filter((s) => (Number(s.revenue) || 0) > 0).length;
 
-  // Split landing cost into its two parts.
+  // Pitch/stall fees are the one real cost recorded in the sales sheet
+  // (as landing cost on PITCH FEE rows) rather than in Expenses.
   const pitchFees = sum(sales.filter((s) => isPitchFee(s.item)), (s) => s.landingCost);
-  const filamentUsed = landingCost - pitchFees;            // filament consumed by sold items
+  const filamentUsed = landingCost - pitchFees;            // info: landing on real products
 
   const expensesTotal = sum(expenses, (e) => e.amount);
   const filamentSpend = sum(expenses.filter((e) => e.category === "Filament"), (e) => e.amount);
   const nonFilamentExpenses = expensesTotal - filamentSpend;
 
-  const operatingProfit = grossProfit - nonFilamentExpenses;   // accrual: costs matched to sales
-  const unusedFilament = filamentSpend - filamentUsed;          // bought but not yet consumed (may be -ve)
-  // Headline (cash): every pound spent counted once.
-  //   = operatingProfit − unusedFilament = revenue − expensesTotal − pitchFees
-  const netProfit = operatingProfit - unusedFilament;
+  // Total money actually spent, and the cash bottom line.
+  const totalSpent = expensesTotal + pitchFees;
+  const netProfit = revenue - totalSpent;                  // = Revenue − everything spent
 
   return {
     revenue, landingCost, grossProfit, orders,
     avgOrder: orders ? revenue / orders : 0,
-    avgMargin: revenue ? (grossProfit / revenue) * 100 : 0,
+    avgMargin: revenue ? (grossProfit / revenue) * 100 : 0,   // product margin (info)
     expensesTotal, filamentSpend, nonFilamentExpenses,
-    pitchFees, filamentUsed, operatingProfit, unusedFilament,
+    pitchFees, filamentUsed, totalSpent,
     netProfit,                       // cash basis — the bottom line
     netMargin: revenue ? (netProfit / revenue) * 100 : 0,
   };
@@ -104,11 +99,12 @@ export function byPlatform(sales) {
 // Time series by month (revenue, profit, expenses, net) --------------------
 export function monthlySeries(sales, expenses) {
   const map = new Map();
-  const touch = (k) => { if (!map.has(k)) map.set(k, { key: k, revenue: 0, grossProfit: 0, expenses: 0, filament: 0 }); return map.get(k); };
+  const touch = (k) => { if (!map.has(k)) map.set(k, { key: k, revenue: 0, grossProfit: 0, expenses: 0, filament: 0, pitch: 0 }); return map.get(k); };
   for (const s of sales) {
     const m = touch((s.date || "").slice(0, 7));
     m.revenue += Number(s.revenue) || 0;
-    m.grossProfit += saleProfit(s);
+    m.grossProfit += saleProfit(s);                 // product margin (info)
+    if (isPitchFee(s.item)) m.pitch += Number(s.landingCost) || 0;
   }
   for (const e of expenses) {
     const m = touch((e.date || "").slice(0, 7));
@@ -118,7 +114,8 @@ export function monthlySeries(sales, expenses) {
   return [...map.values()]
     .filter((m) => m.key)
     .sort((a, b) => a.key.localeCompare(b.key))
-    .map((m) => ({ ...m, net: m.grossProfit - (m.expenses - m.filament) }));
+    // net is cash: revenue minus everything actually spent that month.
+    .map((m) => ({ ...m, net: m.revenue - m.expenses - m.pitch }));
 }
 
 // Daily revenue series (for a sparkline / area chart) ----------------------

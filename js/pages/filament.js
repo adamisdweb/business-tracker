@@ -37,7 +37,7 @@ export default {
           : `At your current pace you've got roughly ${runwayWeeks === Infinity ? "∞" : Math.round(runwayWeeks)} weeks of filament left.`),
       el("div", { class: "row" },
         item("Bought (all time)", fmtGBP(fil.bought)),
-        item("Used (landing cost)", fmtGBP(fil.used), "negv"),
+        item("Used (est.)", fmtGBP(fil.used), "negv"),
         item("Weekly burn", fmtGBP(weeklyBurn)),
         item("Runway", runwayWeeks === Infinity ? "—" : `${Math.round(runwayWeeks)} wks`)));
     content.append(banner);
@@ -57,8 +57,8 @@ export default {
     // gauges
     content.append(el("div", { class: "grid kpis page-section" },
       statCard({ label: "Filament purchased", ico: "🧵", value: fmtGBP(fil.bought), accent: "purple" }),
-      statCard({ label: "Filament used", ico: "🔥", value: fmtGBP(fil.used), accent: "amber", sub: `${used.length} prints` }),
-      statCard({ label: "Avg filament / sale", ico: "📐", value: fmtGBP(used.length ? fil.used / used.length : 0), accent: "blue" }),
+      statCard({ label: "Cost of goods used (est.)", ico: "🔥", value: fmtGBP(fil.used), accent: "amber", sub: `${used.length} sales` }),
+      statCard({ label: "Avg cost / sale (est.)", ico: "📐", value: fmtGBP(used.length ? fil.used / used.length : 0), accent: "blue" }),
       statCard({ label: "Reorder level", ico: "🔔", value: fmtGBP(reorder), accent: low ? "red" : "green" })));
 
     // explainer + reorder setting
@@ -71,7 +71,7 @@ export default {
     content.append(el("div", { class: "card pad" },
       sectionHead("Why this matters"),
       el("p", { class: "muted", style: "line-height:1.65;margin-top:0" },
-        "This page is the other half of your no-double-counting rule. Filament you buy shows up as an Expense, but it isn't subtracted from profit there — instead it's drawn down here as you use it (your per-sale landing cost). So you can see how much filament value you've still got sitting on the shelf without it ever distorting your profit."),
+        "Filament you buy is an Expense and is taken off your net profit when you buy it. This page is a separate <b>stock gauge</b>: it compares the filament you've purchased against your per-sale landing costs (your rough estimate of what each item costs to make) to flag when you're running low. Because landing cost sometimes also includes postage, treat the “used” figure as an estimate."),
       el("div", { class: "chip-group", style: "margin-top:10px" },
         el("span", { class: "muted" }, "Warn me when remaining filament drops below £"), input, saveBtn)));
   },

@@ -22,23 +22,22 @@ SDK and Chart.js straight from a CDN.
 
 ### The profit rule (cash basis, no double-counting)
 
-The headline **Net Cash Profit** is what you've actually banked. The Overview
-shows it as a transparent waterfall:
+The headline **Net Profit** is what you've actually banked:
 
 ```
-Revenue
-  − filament used in sold items   (the filament part of landing cost)
-  − stall / pitch fees            (the non-filament part of landing cost)
-= Gross profit                    (product margin — your pricing health)
-  − running costs                 (equipment, packaging, wages, tools…)
-= Operating profit                (accrual view: filament matched to sales)
-  − filament bought but not used  (stock paid for, not yet consumed)
-= Net cash profit                 (the bottom line)
+Net Profit = Revenue − Total Expenses − Stall/Pitch fees
 ```
 
-Filament is only ever counted **once** — total filament deducted = used +
-unused = filament bought. Per-sale **landing cost** drives product margins;
-it never double-counts against the filament you buy.
+Everything you spend money on — filament, boxes & postage, equipment, wages —
+is recorded as an **Expense** and subtracted exactly once. The only real cost
+not in the Expenses sheet is car-boot **pitch fees** (logged on PITCH FEE sales
+rows), so those come off too.
+
+Your per-sale **landing cost** is a rough per-item cost (mostly filament,
+sometimes postage). It is **information only** — it powers the per-product
+margin shown around the app, but it is **not** subtracted from net profit,
+because the filament and packaging it represents are already in your expenses.
+Counting it again would double-count those costs.
 
 ---
 

@@ -25,14 +25,14 @@ export default {
     content.append(el("div", { class: "card pad page-section" },
       sectionHead("How your profit is calculated"),
       el("div", { class: "note-box" },
-        el("div", { html: "<b>Net cash profit = Revenue − all money spent</b> (counted once)" }),
+        el("div", { html: "<b>Net profit = Revenue − everything you've spent</b> (each cost counted once)" }),
         el("div", { style: "margin-top:8px;line-height:1.65" },
-          "The headline is a <b>cash</b> figure — what you've actually banked. The Overview waterfall walks it through: " +
-          "<b>Gross profit</b> (revenue − filament used in sold items − stall fees) shows your pricing health; then running " +
-          "costs and the filament you've <b>bought but not yet used</b> come off to reach net. " +
-          "Per-sale <b>landing cost</b> drives product margins; filament is only ever counted once — when you buy it — so it's never double-counted."),
+          "Every purchase — filament, boxes & postage, equipment, wages — is recorded as an <b>Expense</b> and subtracted once. " +
+          "The only cost outside the Expenses sheet is car-boot <b>pitch fees</b> (logged on PITCH FEE sales rows), which are also taken off. " +
+          "Your per-sale <b>landing cost</b> is a product-margin guide for <b>information only</b> — it is <b>not</b> subtracted from net profit, " +
+          "because the filament and packaging it represents are already in your expenses (so nothing is double-counted)."),
         el("div", { class: "faint", style: "margin-top:10px" },
-          `Current totals — Revenue ${fmtGBP(sum.revenue)} · Gross ${fmtGBP(sum.grossProfit)} · Operating ${fmtGBP(sum.operatingProfit)} · Filament unused ${fmtGBP(sum.unusedFilament)} · Net cash ${fmtGBP(sum.netProfit)}`))));
+          `Current totals — Revenue ${fmtGBP(sum.revenue)} · Total spent ${fmtGBP(sum.totalSpent)} (expenses ${fmtGBP(sum.expensesTotal)} + pitch fees ${fmtGBP(sum.pitchFees)}) · Net profit ${fmtGBP(sum.netProfit)}`))));
 
     // data: import / export
     const importBtn = el("button", { class: "btn", onclick: async () => {
